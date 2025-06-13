@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>irem'e Sürpriz</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #ffe6f0, #e6f7ff);
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+      text-align: center;
+      color: #333;
+    }
+
+    h1#question {
+      margin-top: 100px;
+      font-size: 2rem;
+      color: #e60073;
+    }
+
+    .btn {
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+      margin: 1rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background: #ff4da6;
+      color: white;
+      position: relative;
+    }
+
+    #noBtn {
+      position: absolute;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #resultScene img {
+      width: 150px;
+      margin-top: 20px;
+    }
+
+    #resultText {
+      font-size: 1.8rem;
+      color: #e60073;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+    .poem-line {
+      opacity: 0;
+      font-size: 1.2rem;
+      transition: opacity 1s ease;
+    }
+
+    .poem-line.show {
+      opacity: 1;
+    }
+
+    .heart {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: red;
+      transform: rotate(45deg);
+      animation: float 6s linear infinite;
+    }
+
+    .heart::before, .heart::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: red;
+      border-radius: 50%;
+    }
+
+    .heart::before {
+      top: -10px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: -10px;
+      top: 0;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1 id="question">İrem, beni seviyor musun?</h1>
+  <button class="btn" onclick="startSurprise()" id="yesBtn">Evet 💖</button>
+  <button class="btn" id="noBtn">Hayır ❌</button>
+
+  <div id="resultScene" class="hidden">
+    <h1 id="resultText">Ben de seni seviyorum 💖</h1>
+    <img src="sarilma.gif" alt="Sarılma GIF" />
+    <div id="poemContainer"></div>
+  </div>
+
+  <audio id="audio" class="hidden" autoplay>
+    <source src="haydi-soyle.mp3" type="audio/mpeg" />
+  </audio>
+
+  <script>
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+
+    noBtn.addEventListener("mouseover", () => {
+      const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+      const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top = `${y}px`;
+    });
+
+    function startSurprise() {
+      document.getElementById("question").classList.add("hidden");
+      yesBtn.classList.add("hidden");
+      noBtn.classList.add("hidden");
+
+      const audio = document.getElementById("audio");
+      audio.classList.remove("hidden");
+      audio.volume = 0;
+      audio.play();
+      const fade = setInterval(() => {
+        if (audio.volume < 0.9) {
+          audio.volume += 0.05;
+        } else {
+          clearInterval(fade);
+        }
+      }, 300);
+
+      document.getElementById("resultScene").classList.remove("hidden");
+
+      for (let i = 0; i < 40; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = (3 + Math.random() * 3) + "s";
+        document.body.appendChild(heart);
+      }
+
+      const lines = [
+  "<span style='color:#e60073; font-weight:bold;'>İ</span>içimde senle çarpan kalbimin sesi var hala ,",
+  "<span style='color:#e60073; font-weight:bold;'>R</span>üzgar gibi geçmedin iz bıraktın her anımda ,",
+  "<span style='color:#e60073; font-weight:bold;'>E</span>llerin değmese de düşlerim de hep sen varsın,",
+  "<span style='color:#e60073; font-weight:bold;'>M</span>ucizelere inanmazdım seni tanıyana kadar,",
+  "💌 İremim...",
+  "Sadece bir isim değilsin.",
+  "Benim sevgilim, sırdaşım, huzurum, her şeyimsin.",
+  "Seninle dünya daha anlamlı, ben daha tamamım."
+];
+
+
+      const container = document.getElementById("poemContainer");
+      let index = 0;
+      function showLine() {
+        if (index < lines.length) {
+          const line = document.createElement("div");
+          line.className = "poem-line";
+          line.innerHTML = lines[index];
+          container.appendChild(line);
+          setTimeout(() => line.classList.add("show"), 100);
+          index++;
+          setTimeout(showLine, 1600);
+        }
+      }
+      showLine();
+    }
+  </script>
+</body>
+</html>
